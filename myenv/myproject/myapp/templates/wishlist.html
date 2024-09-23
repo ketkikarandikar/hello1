@@ -1,0 +1,45 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <div class="intro-excerpt">
+                    <h1>Wishlist</h1>
+                </div>
+            </div>
+            <div class="col-lg-7">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="untree_co-section product-section before-footer-section">
+    <div class="container">
+        <div class="row">
+            {% if wish %}
+                {% for i in wish %}
+                    <div class="col-12 col-md-4 col-lg-3 mb-5">
+                        <a class="product-item" href="{% url 'bpdetails' pk=i.product.pk %}">
+                            <img style="height: 250px; width: 350px;" src="{{ i.product.productimage.url }}" class="img-fluid product-thumbnail">
+                            <h3 class="product-title">{{ i.product.productname}}</h3>
+                            <strong class="product-price">${{ i.product.pprice}}</strong>
+                            <p>{{ i.product.pdesc}}</p>
+                            <span class="icon-cross">
+                                <img src="{% static 'images/cross.svg' %}" class="img-fluid">
+                            </span>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No items in your wishlist.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/tiny-slider.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+{% endblock %}

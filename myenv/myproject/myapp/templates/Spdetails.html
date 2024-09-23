@@ -1,0 +1,47 @@
+{% extends 'SellerHeader.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<title>Well Furni</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+
+<body>
+                {% for i in product %}
+                <div class="modal show d-block" id="myModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">{{ i.productname }}</h4>
+                                <a href="{% url 'viewproduct' %}" type="button" class="btn-close"></a>
+                            </div>
+
+                            <!-- Modal Body -->
+                            <div class="modal-body d-flex flex-column justify-content-center">
+                                <img class="img-fluid mx-auto my-auto mb-3" style="box-shadow: 0px 0px 3px 2px green;border-radius: 5%;height: 250px;width: 250px;" src="{{ i.productimage.url }}">
+                                <p class="h5 text-black">Product Category: <span>{{ i.pcategory }}</span></p>
+                                <p class="h5 text-black">Product Description: <span>{{ i.pdesc }}</span></p>
+                                <p class="h5 text-black">Product Price: $<span>{{  i.pprice }}</span></p>
+                                <a href="{% url 'pupdate' pk=i.pk %}" type="button" class="btn btn-danger bg-success mx-4 mt-4">Update Product</a>
+                                <a href="{% url 'delete' pk=i.pk %}" type="button" class="btn btn-danger bg-success mx-4 mt-4">Delete Product</a>
+                            </div>
+
+                            <div class="modal-footer">
+                                <a href="{% url 'viewproduct' %}" type="button" class="btn btn-danger">Close</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/tiny-slider.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>
+{% endblock %}

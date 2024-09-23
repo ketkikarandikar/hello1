@@ -1,0 +1,168 @@
+{% extends 'SellerHeader.html' %}
+{% load static %}
+
+{% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Add Product</title>
+    <link rel="stylesheet" href="{% static 'path/to/your/css/file.css' %}">
+</head>
+<body>
+    <!-- Start Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-5">
+                    <div class="intro-excerpt">
+                        <h1>Add Product Here!</h1>
+                        <p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="hero-img-wrap">
+                        <img src="{% static "images/couch.png" %}" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Hero Section -->
+
+    <!-- Start Contact Form -->
+    <div class="untree_co-section">
+        <div class="container">
+            {% if msg %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ msg }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <div class="block">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-8 pb-4">
+                        <form method="post" action="{% url 'addproduct' %}" enctype="multipart/form-data" id="addProductForm">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="table">
+                                        <tr>
+                                            <td>Select Category</td>
+                                            <td>
+                                                <select class="form-control w-50" name="pcategory" id="pcategory">
+                                                    <option class="text-center" value="">Select Types</option>
+                                                    <option value="Sofa">Sofa</option>
+                                                    <option value="Coffee Table">Coffee Table</option>
+                                                    <option value="TV Stand">TV Stand</option>
+                                                    <option value="Armchair">Armchair</option>
+                                                    <option value="Bookshelf">Bookshelf</option>
+                                                    <option value="Bed Frame">Bed Frame</option>
+                                                    <option value="Mattress">Mattress</option>
+                                                    <option value="Mirror">Mirror</option>
+                                                    <option value="Dining Table">Dining Table</option>
+                                                    <option value="Sideboard">Sideboard</option>
+                                                    <option value="Server Table">Server Table</option>
+                                                    <option value="Dining Chairs">Dining Chairs</option>
+                                                </select>
+                                                <small class="text-danger" id="pcategoryError"></small>
+                                            </td>
+                                        </tr>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="text-black" for="productname">Product name</label>
+                                        <input type="text" name="productname" class="form-control" id="productname">
+                                        <small class="text-danger" id="productnameError"></small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="text-black" for="pprice">Price</label>
+                                        <input type="number" name="pprice" class="form-control" id="pprice">
+                                        <small class="text-danger" id="ppriceError"></small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="text-black" for="pdesc">Product Description</label>
+                                        <textarea name="pdesc" class="form-control" id="pdesc"></textarea>
+                                        <small class="text-danger" id="pdescError"></small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="text-black" for="productimage">Product Image</label>
+                                        <input name="productimage" class="form-control m-2" type="file" id="productimage">
+                                        <small class="text-danger" id="productimageError"></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary-hover-outline mt-3">Add Product</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Contact Form -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('addProductForm').addEventListener('submit', function(event) {
+                console.log('Form submission triggered');
+                var formIsValid = true;
+
+                var pcategory = document.getElementById('pcategory').value;
+                var productname = document.getElementById('productname').value;
+                var pprice = document.getElementById('pprice').value;
+                var pdesc = document.getElementById('pdesc').value;
+                var productimage = document.getElementById('productimage').value;
+
+                var pcategoryError = document.getElementById('pcategoryError');
+                var productnameError = document.getElementById('productnameError');
+                var ppriceError = document.getElementById('ppriceError');
+                var pdescError = document.getElementById('pdescError');
+                var productimageError = document.getElementById('productimageError');
+
+                pcategoryError.textContent = '';
+                productnameError.textContent = '';
+                ppriceError.textContent = '';
+                pdescError.textContent = '';
+                productimageError.textContent = '';
+
+                if (pcategory === '') {
+                    pcategoryError.textContent = 'Please select a category.';
+                    formIsValid = false;
+                }
+
+                if (productname.trim() === '') {
+                    productnameError.textContent = 'Product name is required.';
+                    formIsValid = false;
+                }
+
+                if (pprice.trim() === '' || pprice <= 0) {
+                    ppriceError.textContent = 'Please enter a valid price.';
+                    formIsValid = false;
+                }
+
+                if (pdesc.trim() === '') {
+                    pdescError.textContent = 'Product description is required.';
+                    formIsValid = false;
+                }
+
+                if (productimage.trim() === '') {
+                    productimageError.textContent = 'Please upload a product image.';
+                    formIsValid = false;
+                }
+
+                if (!formIsValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

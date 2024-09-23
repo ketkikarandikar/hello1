@@ -1,0 +1,93 @@
+{% extends 'Sellerheader.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <div class="intro-excerpt">
+                    <h1>Login here!</h1>
+                    <p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+                    <p><a href="" class="btn btn-secondary me-2">Shop Now</a><a href="#" class="btn btn-white-outline">Explore</a></p>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="hero-img-wrap">
+                    <img src="{% static 'images/couch.png' %}" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+<!-- Start Contact Form -->
+<div class="untree_co-section">
+    <div class="container">
+        {% if msg %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>{{ msg }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %} 
+
+        <form method="post" action="{% url 'login' %}" id="loginForm">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-6 offset-3">
+                    <div class="form-group">
+                        <label class="text-black" for="email">Email address</label>
+                        <input type="email" name="email" class="form-control" id="email" >
+                        <small class="text-danger" id="emailError"></small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 offset-3 pt-3">
+                    <div class="form-group mb-3">
+                        <label class="text-black" for="password">Password</label>
+                        <input type="password" name="password" class="form-control" id="password" >
+                        <small class="text-danger" id="passwordError"></small>
+                    </div>
+                    <a class="mx-2" href="{% url 'fpass' %}">Forgot Password?</a>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary-hover-outline mt-3 offset-5">Login</button>
+        </form>
+    </div>
+</div>
+<!-- End Contact Form -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    var formIsValid = true;
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+
+    var emailError = document.getElementById('emailError');
+    var passwordError = document.getElementById('passwordError');
+
+    emailError.textContent = '';
+    passwordError.textContent = '';
+
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        emailError.textContent = 'Invalid email address.';
+        formIsValid = false;
+    }
+
+    if (password.trim() === '') {
+        passwordError.textContent = 'Password is required.';
+        formIsValid = false;
+    }
+
+    if (!formIsValid) {
+        event.preventDefault();
+    }
+});
+</script>
+{% endblock %}

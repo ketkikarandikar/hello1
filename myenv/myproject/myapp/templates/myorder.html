@@ -1,0 +1,100 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{%block content %}
+<!doctype html>
+<html lang="en">
+
+{% if cart %}
+		<!-- Start Hero Section -->
+			<div class="hero">
+				<div class="container">
+					<div class="row justify-content-between">
+						<div class="col-lg-5">
+							<div class="intro-excerpt">
+								<h1>Your Orders</h1>
+							</div>
+						</div>
+						<div class="col-lg-7">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		<!-- End Hero Section -->
+
+		
+
+		<div class="untree_co-section before-footer-section">
+            <div class="container">
+              <div class="row mb-5">
+               
+                  <div class="site-blocks-table">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th class="product-thumbnail">Image</th>
+                          <th class="product-name">Product</th>
+                          <th class="product-price">Price</th>
+                          <th class="product-quantity">Quantity</th>
+                          <th class="product-total">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+
+                          {% for i in cart %}
+                          <td class="product-thumbnail">
+                            <img style="height: 150px;width: 200px;border-radius: 10%; border: 2px green solid;box-shadow: 0px 0px 1px 2px green;" src="{{i.product.productimage.url}}" alt="Image" class="img-fluid">
+                          </td>
+                          <td class="product-name">
+                            <h2 class="h5 text-black">{{i.product.productname}}</h2>
+                          </td>
+                          <td>${{i.product.pprice}}</td>
+                          <form class="col-md-12" action="{% url 'changeqty' pk=i.pk %}" method="post">
+                             {% csrf_token %} 
+                          <td>
+                            <div  class="input-group mb-3  d-flex align-items-center quantity-container">
+                              <div class="input-group-prepend">
+                              </div>
+                              <input style="background: none;border: none;text-decoration: none;" name="qty" type="number"  class="form-control  text-center quantity-amount" value="{{i.qty}}"  aria-label="Example text with button addon" aria-describedby="button-addon1" disabled>
+                              <div class="input-group-append">
+                              </div>
+                            </div>
+        
+                          </td>
+                          <td>${{i.roundtotal}}</td>
+                        </tr>
+                      </form>
+                       {% endfor %}
+        
+                        
+                      </tbody>
+                    </table>
+                  </div>
+               
+              </div>
+        
+              
+
+            </div>
+          </div>
+           {% else %}
+           <div class="container mt-5 pt-5 p-5">
+            <div class="row pt-5 m-5">
+              <div class="col-sm-12 p-5">
+                <h1>No products ordered!! Ordered products to checkout/buy</h1>
+              </div>
+            </div>
+           </div>
+           {% endif %}
+		
+         
+		
+	</body>
+{% endblock %}
+
+  
+
+
+</html>

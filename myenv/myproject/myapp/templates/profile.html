@@ -1,0 +1,160 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Edit Profile</title>
+</head>
+<body>
+    <!-- Start Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-5">
+                    <div class="intro-excerpt">
+                        <h1>Edit Your Profile</h1>
+                        <p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+                        <p><a href="" class="btn btn-secondary me-2">Shop Now</a><a href="#" class="btn btn-white-outline">Explore</a></p>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="hero-img-wrap">
+                        <img src="{% static "images/couch.png" %}" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Hero Section -->
+
+    <!-- Start Contact Form -->
+    <div class="untree_co-section">
+        <div class="container">
+            {% if msg %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ msg }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <div class="block">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-8 pb-4">
+                        <form method="post" action="{% url 'profilepage' %}" enctype="multipart/form-data" id="editProfileForm">
+                            {% csrf_token %}
+                            <div class="table">
+                                <tr>
+                                    <td>Update Your Profile Pic</td>
+                                    <td>
+                                        <input name="profile" class="m-2" type="file">
+                                    </td>
+                                    <td>
+                                        <img style="height: 150px; border-radius: 50%; width: 150px; box-shadow: 0px 0px 5px 5px aquamarine;" 
+                                             src="{{ user.profile.url }}" alt="">
+                                    </td>
+                                </tr>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="text-black" for="name">Full name</label>
+                                        <input type="text" name="name" value="{{ user.name }}" class="form-control" id="name">
+                                        <small class="text-danger" id="nameError"></small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="text-black" for="email">Email address</label>
+                                        <input type="email" name="email" value="{{ user.email }}" class="form-control" id="email">
+                                        <small class="text-danger" id="emailError"></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="text-black" for="mobile">Mobile No</label>
+                                        <input type="tel" value="{{ user.mobile }}" name="mobile" class="form-control" id="mobile">
+                                        <small class="text-danger" id="mobileError"></small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="text-black" for="country">Country</label>
+                                        <input type="text" value="{{ user.countryName }}" name="countryName" class="form-control" id="country">
+                                        <small class="text-danger" id="countryError"></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary-hover-outline mt-3">Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Contact Form -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('editProfileForm').addEventListener('submit', function(event) {
+                var formIsValid = true;
+
+                var name = document.getElementById('name').value;
+                var email = document.getElementById('email').value;
+                var mobile = document.getElementById('mobile').value;
+                var country = document.getElementById('country').value;
+
+                var nameError = document.getElementById('nameError');
+                var emailError = document.getElementById('emailError');
+                var mobileError = document.getElementById('mobileError');
+                var countryError = document.getElementById('countryError');
+
+                nameError.textContent = '';
+                emailError.textContent = '';
+                mobileError.textContent = '';
+                countryError.textContent = '';
+
+                // Name validation
+                if (name.trim() === '') {
+                    nameError.textContent = 'Full name is required.';
+                    formIsValid = false;
+                }
+
+                // Email validation
+                var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                if (email.trim() === '') {
+                    emailError.textContent = 'Email address is required.';
+                    formIsValid = false;
+                } else if (!emailPattern.test(email)) {
+                    emailError.textContent = 'Please enter a valid email address.';
+                    formIsValid = false;
+                }
+
+                // Mobile validation
+                var mobilePattern = /^\d{10}$/; // Adjust pattern based on your needs
+                if (mobile.trim() === '') {
+                    mobileError.textContent = 'Mobile number is required.';
+                    formIsValid = false;
+                } else if (!mobilePattern.test(mobile)) {
+                    mobileError.textContent = 'Please enter a valid 10-digit mobile number.';
+                    formIsValid = false;
+                }
+
+                // Country validation
+                if (country.trim() === '') {
+                    countryError.textContent = 'Country is required.';
+                    formIsValid = false;
+                }
+
+                if (!formIsValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'SellerHeader.html' %}
+{% load static %}
+
+{%block content %}
+<!doctype html>
+<html lang="en">
+
+
+		<!-- Start Hero Section -->
+			<div class="hero">
+				<div class="container">
+					<div class="row justify-content-between">
+						<div class="col-lg-5">
+							<div class="intro-excerpt">
+								<h1>Update Product Here!</h1>
+								<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+							</div>
+						</div>
+						<div class="col-lg-7">
+							<div class="hero-img-wrap">
+								<img src="{% static "images/couch.png" %}" class="img-fluid">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<!-- End Hero Section -->
+
+		
+		<!-- Start Contact Form -->
+		<div class="untree_co-section">
+      <div class="container">
+        {% if msg %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{msg}}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
+        <div class="block">
+          <div class="row justify-content-center">
+
+
+            <div class="col-md-8 col-lg-8 pb-4">
+
+
+             
+
+               
+               
+
+              <form method="post" action="{% url 'pupdate' pk=product.pk %}" enctype="multipart/form-data">
+             {% csrf_token %}
+             <div class="row">
+                <div class="col-5 offset-3 d-flex flex-column ">
+                    <label class="text-black" for="">Product Image</label>
+
+                        <img style="height: 200px;" src="{{product.productimage.url}}" alt="">
+                    
+                </div>
+             </div>
+                <div class="row">
+                    
+                    <div class="col-12">
+              
+                      <div class="table offset-3 mt-4">
+                        <tr>
+                          <td>
+                            Select Category
+                          </td>
+                          <td>
+                            <select class="form-control w-50" name="pcategory" id="">
+                              <option class="text-center" value="">Select Types</option>
+                              <option value="Sofa">Sofa</option>
+                              <option value="Coffee Table">Coffee Table</option>
+                              <option value="TV Stand">TV Stand</option>
+                              <option value="Armchair">Armchair</option>
+                              <option value="Bookshelf">Bookshelf</option>
+                              <option value="Bed Frame">Bed Frame</option>
+                              <option value="Mattress">Mattress</option>
+                              <option value="Mirror">Mirror</option>
+                              <option value="Dining Table">Dining Table</option>
+                              <option value="Sideboard">Sideboard</option>
+                              <option value="Server Table">Server Table</option>
+                              <option value="Dining Chairs">Dining Chairs</option>
+                              </select>
+                          </td>
+                        </tr>
+                        
+                    
+                         </div>
+                    </div>
+                  <div class="col-6">
+                    
+                    <div class="form-group">
+                      <label class="text-black" for="productname">Product name</label>
+                      <input type="text" name="productname" value="{{product.productname}}" class="form-control" id="fname">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                        <label class="text-black" for="pprice">Price</label>
+                        <input type="number"  name="pprice" value="{{product.pprice}}" class="form-control" id="price">
+                      </div>
+
+
+                    
+                </div>  
+                <div class="col-6">
+                  <label class="text-black" for="pdesc">Product Description</label>
+                  <textarea name="pdesc" class="form-control" id="pdesc">{{ product.pdesc }}</textarea>
+                </div>
+                <div class="col-6">
+                  <tr>
+                    <label class="text-black" for="productimage">Product Image</label>
+                    <td>
+                        <input name="productimage" class="m-2" type="file">
+                    </td>
+                </tr>
+                </div>  
+                  
+                </div>
+            <button type="submit" class="btn btn-primary-hover-outline mt-3">Update Product</button>
+              </form>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+
+  <!-- End Contact Form -->
+
+		
+
+	</body>
+{% endblock %}
+</html>

@@ -1,0 +1,185 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+</head>
+<body>
+{% if cart %}
+    <!-- Start Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-5">
+                    <div class="intro-excerpt">
+                        <h1>Cart</h1>
+                    </div>
+                </div>
+                <div class="col-lg-7"></div>
+            </div>
+        </div>
+    </div>
+    <!-- End Hero Section -->
+
+    <div class="untree_co-section before-footer-section">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="site-blocks-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="product-thumbnail">Image</th>
+                                <th class="product-name">Product</th>
+                                <th class="product-price">Price</th>
+                                <th class="product-quantity">Quantity</th>
+                                <th class="product-total">Total</th>
+                                <th class="product-remove">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart %}
+                            <tr id="cart-item-{{ item.pk }}">
+                                <td class="product-thumbnail">
+                                    <img style="height: 150px; width: 200px; border-radius: 10%; border: 2px green solid; box-shadow: 0px 0px 1px 2px green;" src="{{ item.product.productimage.url }}" alt="Image" class="img-fluid">
+                                </td>
+                                <td class="product-name">
+                                    <h2 class="h5 text-black">{{ item.product.productname }}</h2>
+                                </td>
+                                <td>${{ item.product.pprice }}</td>
+                                <td>
+                                    <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
+                                        <input type="number" class="form-control text-center quantity-amount" value="{{ item.qty }}" min="1" name="qty" data-item-pk="{{ item.pk }}" onchange="updateQuantity(this)">
+                                    </div>
+                                </td>
+                                <td class="product-total" id="roundtotal-{{ item.pk }}">{{ item.roundtotal }}</td>
+                                <td><a href="{% url 'deletecart' pk=item.product.pk %}" class="btn btn-black btn-sm">X</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row mb-5">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <button class="btn btn-black btn-sm btn-block" onclick="updateCart()">Update Cart</button>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'shop' %}" class="btn btn-outline-black btn-sm btn-block">Continue Shopping</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="text-black h4" for="coupon">Coupon</label>
+                            <p>Enter your coupon code if you have one.</p>
+                        </div>
+                        <div class="col-md-8 mb-3 mb-md-0">
+                            <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-black">Apply Coupon</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 pl-5">
+                    <div class="row justify-content-end">
+                        <div class="col-md-7">
+                            <div class="row">
+                                <div class="col-md-12 text-right border-bottom mb-5">
+                                    <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <span class="text-black">Subtotal</span>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="text-black" id="net-total">${{ net }}</strong>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6">
+                                    <span class="text-black">Total(Tax)</span>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="text-black" id="subtotal">${{ subtotal }}</strong>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-black btn-lg py-3 btn-block" id="rzp-button1">Proceed To Checkout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="container mt-5 p-5 mb-5">
+        <div class="row">
+            <div class="col-sm-12 pt-5 mb-5">
+                <h1>No products added!! Add products to checkout/buy</h1>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function updateQuantity(input) {
+        var qty = $(input).val();
+        var itemPk = $(input).data('item-pk');
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "changeqty" pk=0 %}'.replace('0', itemPk),
+            data: {
+                'qty': qty,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.roundtotal) {
+                    $('#roundtotal-' + itemPk).text(response.roundtotal);
+                    $('#net-total').text('$' + response.net_total.toFixed(2));
+                    $('#subtotal').text('$' + response.subtotal.toFixed(2));
+                } else if (response.error) {
+                    alert('Error: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error updating quantity. Status: ' + status + ' Error: ' + error);
+                console.log('Response:', xhr.responseText);
+            }
+        });
+    }
+
+    function updateCart() {
+        // Placeholder function for updating the cart in the backend
+        alert('Update cart function to be implemented.');
+    }
+
+    var options = {
+        "key": "rzp_test_3iCOPLbchUyIwQ", // Enter the Key ID generated from the Dashboard
+        "amount": "{{ context.payment.amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Furni",
+        "description": "Test Payment", // This is a sample Order ID. Pass the `id` obtained in the response of
+    };
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button1').onclick = function(e) {
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+</body>
+</html>
+{% endblock %}
